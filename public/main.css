@@ -1,0 +1,42 @@
+.nav-header {
+    border-bottom: 2px solid #eee;
+    margin-bottom: 40px;
+}
+
+body {
+    background: #FBFEF9;
+    color: #333333;
+}
+
+input[type="text"] {
+   border-color: #BF1363;
+   border-radius: 5px;
+}
+
+input[type="number"] {
+    width: 50px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.btn {
+    background: #BF1363;
+    color: #FBFEF9;
+}
+
+.sum-row {
+    background: #BF1363;
+    color: #FBFEF9;
+}
+
+input[type="number"]:focus{
+    border-radius: 5px;
+}
+
+table thead tr:first-child th {
+    border-top: 0px;
+}
+
+table tbody tr:last-child {
+    border-bottom: 1px solid #BF1363;
+}
