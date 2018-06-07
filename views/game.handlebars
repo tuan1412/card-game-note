@@ -1,3 +1,4 @@
+<form action="/api/round" method="post">
 <div class="table-responsive">
     <table class="table table-striped">
     <thead>
@@ -26,10 +27,10 @@
         </tr>
           <tr>
             <th scope="row">Round<span>1</span></th>
-            <td><input type="number"></td>
-            <td><input type="number"></td>
-            <td><input type="number"></td>
-            <td><input type="number"></td>
+            <td><input type="number" name="p1s"></td>
+            <td><input type="number" name="p2s"></td>
+            <td><input type="number" name="p3s"></td>
+            <td><input type="number" name="p4s"></td>
         </tr>
         {{!-- {{#each round}}
         <tr>
@@ -43,10 +44,10 @@
     </tbody>
 </table>
 <div class="text-center">
-    <button class="btn" id="add">ADD A ROUND</button>
+    <button type="submit" class="btn" id="add">ADD A ROUND</button>
 </div>
 </div>
-
+</form>
 
 <script>
     $(document).ready(function () {
@@ -56,10 +57,10 @@
             $("#resultBody").append(`
                 <tr>
                     <th>Round <span>${index}</span></th>
-                    <td><input type="number"></input></td>
-                   <td><input type="number"></input></td>
-                    <td><input type="number"></input></td>
-                    <td><input type="number"></input></td>
+                    <td><input type="number" name="p1s"></input></td>
+                   <td><input type="number" name="p2s"></input></td>
+                    <td><input type="number" name="p3s"></input></td>
+                    <td><input type="number" name="p4s"></input></td>
                 </tr>
                 `)
         })
