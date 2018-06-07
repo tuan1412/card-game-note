@@ -22,14 +22,11 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
-var gameID;
-
 app.post('/api/game',(req,res)=>{
     console.log(req.body)
     const newGame = {
         player: req.body.player
     }
-    console.log(newGame);
     Game.create(newGame,(err, gameCreated)=>{
         if (err) res.status(500).send({ success: 0, err })
         else{
@@ -48,13 +45,15 @@ app.get('/game/:id', (req, res) => {
             player1: game.player[0],
             player2: game.player[1],
             player3: game.player[2],
-            player4: game.player[3],            
+            player4: game.player[3],   
+            round: game.round         
             })
         }
     })
 })
 
-app.post('/api/round',(req,res)=>{
+app.post('/api/game/:id',(req,res)=>{
+    let gameID = req.params.id;
     Game.findById(gameID,(err,game)=>{
         if(err) throw err;
         let player1 = game.player[0]
@@ -62,31 +61,11 @@ app.post('/api/round',(req,res)=>{
         let player3 = game.player[2]
         let player4 = game.player[3]
 
-        let score1 = parseInt(req.body.p1s) 
-        let score2 = parseInt(req.body.p2s)
-        let score3 = parseInt(req.body.p3s)
-        let score4 = parseInt(req.body.p4s)
+        let score = req.body.score;
 
-        console.log(score1)
+       
 
-        game.round.push({
-            score: [{
-                player: player1,
-                pscore :score1
-            },
-            {
-                player: player2,
-                pscore :score2
-            },
-            {
-                player: player3,
-                pscore :score3
-            },
-            {
-                player: player4,
-                pscore :score4
-            }]
-        })
+        game.round.push(score);
 
         game.save((err)=>{
             if(err) console.log("Error");

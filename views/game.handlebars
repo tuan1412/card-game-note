@@ -1,66 +1,77 @@
-<form action="/api/round" method="post">
 <div class="table-responsive">
     <table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">{{player1}}</th>
-            <th scope="col">{{player2}}</th>
-            <th scope="col">{{player3}}</th>
-            <th scope="col">{{player4}}</th>
-        </tr>
-         <tr class="sum-row">
-            <th scope="row">Sum of score (0)</th>
-            <th>-5</th>
-            <th>14</th>
-            <th>-1</th>
-            <th>8</th>
-        </tr>
-    </thead>
-    <tbody id="resultBody">
-        <tr>
-            <th scope="row">Round<span>1</span></th>
-            <td><input type="number"></td>
-            <td><input type="number"></td>
-            <td><input type="number"></td>
-            <td><input type="number"></td>
-        </tr>
-          <tr>
-            <th scope="row">Round<span>1</span></th>
-            <td><input type="number" name="p1s"></td>
-            <td><input type="number" name="p2s"></td>
-            <td><input type="number" name="p3s"></td>
-            <td><input type="number" name="p4s"></td>
-        </tr>
-        {{!-- {{#each round}}
-        <tr>
-            <th>{{round.index}}</th>
-            <td>{{p1s}}</td>
-            <td>{{p2s}}</td>
-            <td>{{p2s}}</td>
-            <td>{{p3s}}</td>
-        </tr>
-        {{/each}} --}}
-    </tbody>
-</table>
-<div class="text-center">
-    <button type="submit" class="btn" id="add">ADD A ROUND</button>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{player1}}</th>
+                <th scope="col">{{player2}}</th>
+                <th scope="col">{{player3}}</th>
+                <th scope="col">{{player4}}</th>
+            </tr>
+            <tr class="sum-row">
+                <th scope="row">Sum of score (0)</th>
+                <th>0</th>
+                <th>0</th>
+                <th>0</th>
+                <th>0</th>
+            </tr>
+        </thead>
+        <tbody id="resultBody">
+            {{#each round}}
+            <tr>
+                <th scope="row">Round
+                    <span>{{@index}}</span>
+                </th>
+                {{#each this}}
+                <td>
+                    <input type="number" value="{{this}}">
+                </td>
+                {{/each}}
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <div class="text-center">
+        <button type="submit" class="btn" id="add">ADD A ROUND</button>
+    </div>
 </div>
-</div>
-</form>
+
 
 <script>
     $(document).ready(function () {
         $("#add").click(function () {
-            console.log("#resultBody tr:last-child th>span")
+            let score = [];
+            $("#resultBody tr:last-child input").each(function () {
+                score.push(parseInt($(this).val(), 10));
+            })
+            const url = window.location.href;
+            const gameId = url.substring(url.lastIndexOf('/') + 1);
+            console.log(typeof score[0])
+            if (score.length > 0) {
+                if (score[0] + score[1] + score[2] + score[3] != 0) {
+                    alert('Sum of score round must be equal 0')
+                    return;
+                } else {
+                    $.ajax({
+                        url: `/api/game/${gameId}`,
+                        type: 'POST',
+                        data: {
+                            score
+                        }
+
+                    }).then(response => console.log(response));
+                }
+
+            }
+
             let index = parseInt($("#resultBody tr:last-child th>span").text(), 10) + 1;
             $("#resultBody").append(`
                 <tr>
-                    <th>Round <span>${index}</span></th>
-                    <td><input type="number" name="p1s"></input></td>
-                   <td><input type="number" name="p2s"></input></td>
-                    <td><input type="number" name="p3s"></input></td>
-                    <td><input type="number" name="p4s"></input></td>
+                    <th>Round <span>${index ? index : 0}</span></th>
+                    <td><input type="number"></input></td>
+                    <td><input type="number"></input></td>
+                    <td><input type="number"></input></td>
+                    <td><input type="number"></input></td>
                 </tr>
                 `)
         })
