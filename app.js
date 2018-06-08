@@ -23,7 +23,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/game',(req,res)=>{
-    console.log(req.body)
     const newGame = {
         player: req.body.player
     }
@@ -56,19 +55,12 @@ app.post('/api/game/:id',(req,res)=>{
     let gameID = req.params.id;
     Game.findById(gameID,(err,game)=>{
         if(err) throw err;
-        let player1 = game.player[0]
-        let player2 = game.player[1]
-        let player3 = game.player[2]
-        let player4 = game.player[3]
-
         let score = req.body.score;
-
-       
-
         game.round.push(score);
 
         game.save((err)=>{
-            if(err) console.log("Error");
+            if(err) res.status(500).send({success: 0})
+            else res.send({status: 1})
         })
     })
 })

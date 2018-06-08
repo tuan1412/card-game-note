@@ -10,22 +10,17 @@
             </tr>
             <tr class="sum-row">
                 <th scope="row">Sum of score (0)</th>
-                <th>0</th>
-                <th>0</th>
-                <th>0</th>
-                <th>0</th>
+                <th id="sum0">0</th>
+                <th id="sum1">0</th>
+                <th id="sum2">0</th>
+                <th id="sum3">0</th>
             </tr>
         </thead>
         <tbody id="resultBody">
             {{#each round}}
-            <tr>
-                <th scope="row">Round
-                    <span>{{@index}}</span>
-                </th>
+            <tr><th scope="row">Round <span>{{@index}}</span></th>
                 {{#each this}}
-                <td>
-                    <input type="number" value="{{this}}">
-                </td>
+                    <td><input class="col{{@index}}"type="number" value="{{this}}"></td>
                 {{/each}}
             </tr>
             {{/each}}
@@ -36,44 +31,58 @@
     </div>
 </div>
 
-
 <script>
     $(document).ready(function () {
+        const addRound = function() {
+            let index = parseInt($("#resultBody tr:last-child th>span").text(), 10) + 1;
+            $("#resultBody").append(`
+                <tr>
+                    <th>Round <span>${index ? index : 0}</span></th>
+                    <td><input class="col0" type="number" value = "0"></input></td>
+                    <td><input class="col1" type="number" value = "0"></input></td>
+                    <td><input class="col2" type="number" value ="0"></input></td>
+                    <td><input class="col3" type="number" value ="0"></input></td>
+                </tr>
+                `);
+        }
+        const calSum = function () {
+            for (let i = 0; i < 4; i++) {
+                let sum = 0;
+                $(`.col${i}`).each(function () {
+                    sum += parseInt($(this).val(), 10);
+                 })
+                 $(`#sum${i}`).text(sum);
+                }
+        }
+
+        addRound();
+        calSum();
+
         $("#add").click(function () {
             let score = [];
             $("#resultBody tr:last-child input").each(function () {
                 score.push(parseInt($(this).val(), 10));
             })
+          
+            if (score[0] + score[1] + score[2] + score[3] != 0) {
+                alert('Sum of score round must be equal 0')
+                return;
+            } 
+            for (let i = 0; i < 4; i++) {
+                let sum = parseInt($(`#sum${i}`).text(), 10) + score[i];
+                $(`#sum${i}`).text(sum);
+            }
             const url = window.location.href;
             const gameId = url.substring(url.lastIndexOf('/') + 1);
-            console.log(typeof score[0])
-            if (score.length > 0) {
-                if (score[0] + score[1] + score[2] + score[3] != 0) {
-                    alert('Sum of score round must be equal 0')
-                    return;
-                } else {
-                    $.ajax({
-                        url: `/api/game/${gameId}`,
-                        type: 'POST',
-                        data: {
-                            score
-                        }
-
-                    }).then(response => console.log(response));
-                }
-
-            }
-
-            let index = parseInt($("#resultBody tr:last-child th>span").text(), 10) + 1;
-            $("#resultBody").append(`
-                <tr>
-                    <th>Round <span>${index ? index : 0}</span></th>
-                    <td><input type="number"></input></td>
-                    <td><input type="number"></input></td>
-                    <td><input type="number"></input></td>
-                    <td><input type="number"></input></td>
-                </tr>
-                `)
+            $.ajax({
+                url: `/api/game/${gameId}`,
+                type: 'POST',
+                data: {
+                        score
+                    }
+                })
+                .then(response => console.log(response));
+            addRound();
         })
     });
 </script>
